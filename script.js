@@ -1,4 +1,34 @@
 // ==========================================
+// MOBILE AUDIO UNLOCK HANDLER
+// ==========================================
+function unlockMobileAudio() {
+  const rainAudio = document.getElementById('rainAudio');
+  const engineAudio = document.getElementById('engineAudio');
+  const mainMusic = document.getElementById('mainMusic');
+
+  const audioTracks = [rainAudio, engineAudio, mainMusic];
+
+  audioTracks.forEach(track => {
+    if (track) {
+      // Play and immediately pause to unlock mobile browser restrictions
+      track.play().then(() => {
+        if (track.paused) track.pause();
+      }).catch(err => {
+        console.log("Audio unlock waiting for user gesture:", err);
+      });
+    }
+  });
+
+  // Remove event listeners after first tap
+  document.removeEventListener('touchstart', unlockMobileAudio);
+  document.removeEventListener('click', unlockMobileAudio);
+}
+
+// Listen for first user tap/click anywhere on screen
+document.addEventListener('touchstart', unlockMobileAudio, { once: true });
+document.addEventListener('click', unlockMobileAudio, { once: true });
+
+// ==========================================
 // 1. REAL-TIME PRESENCE ENGINE (FIREBASE)
 // ==========================================
 const firebaseConfig = {
