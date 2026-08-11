@@ -743,8 +743,9 @@ canvas {
   pointer-events: none;
   z-index: 4;
 }
-
-/* Mobile Layout Overrides */
+/* ========================================== */
+/* MOBILE VERTICAL POSITIONING FIX            */
+/* ========================================== */
 @media screen and (max-width: 600px) {
   html, body {
     height: 100vh;
@@ -752,79 +753,60 @@ canvas {
     background-color: #0b0d12 !important;
   }
 
-  .app-interface {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 8px 12px;
-    height: 100vh;
+  /* Overall container setup */
+  .app-interface,
+  .viewport-wrapper,
+  #viewport {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    height: 100vh !important;
+    padding: 4px 10px !important;
+    box-sizing: border-box !important;
   }
 
-  /* Video fills frame cleanly */
-  video.bg-art, #bgVideo {
+  /* BLUE CIRCLE: Top Header & Controls (Pushed UP) */
+  header, 
+  .top-bar, 
+  .controls-panel, 
+  .header-card {
+    margin-top: -8px !important;
+    z-index: 30 !important;
+  }
+
+  /* YELLOW CIRCLE: Video Stage (Expanded & Pushed DOWN) */
+  .illustration-overlay, 
+  #illustrationStage {
+    flex: 1 !important;
+    margin-top: 4px !important;
+    margin-bottom: -35px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 16px !important;
+  }
+
+  video.bg-art, 
+  #bgVideo {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
-    transform: none !important;
   }
 
-  /* Single clear title */
-  .hero-musafir-title {
-    font-size: 3rem !important;
-    margin-top: 10px;
-  }
-
-  /* Pull player card slightly UP to cover lower canvas/video boundary */
-  .player-wrapper {
-    margin-top: -20px;
-    padding: 12px 14px;
-    border-radius: 20px;
-    background: rgba(18, 20, 26, 0.92) !important;
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8);
-    z-index: 20;
-  }
-
-  /* Show volume & audio control sliders on mobile */
-  .mixer-controls {
-    display: flex !important;
-    flex-direction: row;
-    justify-content: space-between;
-    gap: 8px;
-    width: 100%;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
-  }
-
-  .mixer-controls .slider-group {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.65rem;
-    color: #a0a5b5;
-  }
-
-  .mixer-controls input[type="range"] {
-    width: 100%;
-    height: 3px;
+  /* RED CIRCLE: Bottom Music Player Card (Pushed UP) */
+  .player-wrapper, 
+  .music-player, 
+  #playerCard {
+    margin-top: -30px !important;
+    padding: 12px 14px !important;
+    border-radius: 20px 20px 0 0 !important;
+    background: rgba(18, 20, 26, 0.95) !important;
+    backdrop-filter: blur(16px) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 -15px 35px rgba(0, 0, 0, 0.9) !important;
+    z-index: 30 !important;
   }
 }
-/* ========================================== */
-/* INSTANT POSTER LOADING & SMOOTH TRANSITION */
-/* ========================================== */
 
-#illustrationStage {
-  background: url('assets/poster.jpg') center/cover no-repeat !important;
-}
-
-#bgVideo {
-  background: transparent !important;
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out;
-}
