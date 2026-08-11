@@ -744,79 +744,86 @@ canvas {
   z-index: 4;
 }
 /* ========================================== */
-/* EXACT MOBILE LAYOUT & SPACING FIX          */
+/* PERFECT MOBILE LAYOUT FIX                  */
 /* ========================================== */
 @media screen and (max-width: 600px) {
   html, body {
-    height: 100vh;
-    overflow: hidden;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    overflow: hidden !important;
     background-color: #0b0d12 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Fill full screen without forcing elements apart */
+  /* Force main app viewport to stay strictly within 100vh */
   .app-interface,
   .viewport-wrapper,
   #viewport {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: flex-start !important;
+    justify-content: space-between !important;
     height: 100vh !important;
-    padding: 6px 12px !important;
+    max-height: 100vh !important;
+    padding: 6px 10px 10px 10px !important;
     box-sizing: border-box !important;
-    gap: 8px !important;
+    overflow: hidden !important;
   }
 
-  /* Top Control Card */
+  /* Top Control Box */
   header, 
   .top-bar, 
   .controls-panel, 
   .header-card {
-    position: relative !important;
-    z-index: 30 !important;
     flex-shrink: 0 !important;
+    z-index: 25 !important;
   }
 
-  /* Video Stage - Keep natural height & cover canvas gaps */
+  /* Video & Background Canvas Stage */
   .illustration-overlay, 
   #illustrationStage {
+    flex: 1 !important;
     position: relative !important;
     width: 100% !important;
-    height: 38vh !important;
-    min-height: 240px !important;
-    max-height: 320px !important;
+    min-height: 200px !important;
     overflow: hidden !important;
     border-radius: 16px !important;
-    margin-bottom: -40px !important; /* Pull player up over bottom edge */
-    z-index: 5 !important;
+    z-index: 10 !important;
   }
 
+  /* Force background video to stay visible on top */
   video.bg-art, 
   #bgVideo {
+    display: block !important;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
+    z-index: 12 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
 
-  /* Canvas background match */
-  #roadCanvas, #trafficCanvas, #skyCanvas, #rainCanvas {
-    background-color: #0b0d12 !important;
+  /* Hide raw road canvas elements underneath on mobile */
+  #roadCanvas, #trafficCanvas {
+    display: none !important;
   }
 
-  /* Bottom Music Player - Fixed position at bottom */
+  /* Bottom Music Player - Fixed snugly inside screen */
   .player-wrapper, 
   .music-player, 
   #playerCard {
-    margin-top: auto !important;
-    padding: 12px 14px !important;
-    border-radius: 20px 20px 0 0 !important;
-    background: rgba(18, 20, 26, 0.96) !important;
-    backdrop-filter: blur(16px) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 -15px 35px rgba(0, 0, 0, 0.95) !important;
-    z-index: 30 !important;
     flex-shrink: 0 !important;
+    width: 100% !important;
+    padding: 10px 12px !important;
+    border-radius: 16px !important;
+    background: rgba(18, 20, 26, 0.95) !important;
+    backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 -10px 25px rgba(0, 0, 0, 0.8) !important;
+    z-index: 25 !important;
+    box-sizing: border-box !important;
   }
 }
