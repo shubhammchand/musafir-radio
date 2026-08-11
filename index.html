@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>मुसाफ़िर | Night Journey Radio</title>
+  
+  <!-- Google Fonts & FontAwesome -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Yatra+One&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- VISUAL CANVAS STACK & VIDEO STAGE          -->
+  <!-- ========================================== -->
+  <div class="viewport-wrapper" id="viewport">
+    
+    <!-- Lightning Screen Flash Overlay -->
+    <div class="lightning-flash" id="lightningOverlay"></div>
+
+    <!-- Canvas 1: Sky Lightning Bolts -->
+    <canvas id="skyCanvas"></canvas>
+
+    <!-- Canvas 2: Highway Road Perspective -->
+    <canvas id="roadCanvas"></canvas>
+    
+    <!-- Canvas 3: Traffic & Moving Front Truck -->
+    <canvas id="trafficCanvas"></canvas>
+
+    <!-- Animated Video Background Stage -->
+    <div class="illustration-overlay" id="illustrationStage">
+      <!-- High-quality looping animated bus video -->
+      <video autoplay loop muted playsinline id="bgVideo" class="bg-art">
+        <source src="assets/bus-night-view.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+      
+      <div class="cabin-lighting-glow" id="cabinGlow"></div>
+      
+      <!-- Interactive Bus Steering Wheel -->
+      <div class="steering-wrapper">
+        <div class="steering-wheel" id="steeringWheel">
+          <div class="steering-center-badge"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas 4: Raindroplets Canvas -->
+    <canvas id="rainCanvas"></canvas>
+
+    <!-- Atmospheric Dark Vignette -->
+    <div class="cinematic-vignette"></div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MAIN USER INTERFACE LAYER                  -->
+  <!-- ========================================== -->
+  <div class="app-interface">
+
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+      <div class="brand-container">
+        <h1 class="brand-title">मुसाफ़िर</h1>
+        <span class="brand-subtitle" id="liveClock">--:-- -- • NH 44</span>
+      </div>
+
+      <!-- Quick Ambient Sound Toggles -->
+      <nav class="ambient-controls">
+        <button class="ambient-btn active" id="btnAuto">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> <span>AUTO</span>
+        </button>
+        <button class="ambient-btn" id="btnWindow">
+          <i class="fa-solid fa-window-maximize"></i> <span>WINDOW</span>
+        </button>
+        <button class="ambient-btn" id="btnRain">
+          <i class="fa-solid fa-cloud-showers-heavy"></i> <span>RAIN</span>
+        </button>
+        <button class="ambient-btn" id="btnEngine">
+          <i class="fa-solid fa-bus"></i> <span>ENGINE</span>
+        </button>
+        <button class="ambient-btn" id="btnConductor">
+          <i class="fa-solid fa-bullhorn"></i> <span>STOPS</span>
+        </button>
+      </nav>
+
+      <!-- Digital LED Marquee Board & Live Passenger Counter -->
+      <div class="right-header-group">
+        <span class="travelers-badge" id="activeTravelers">
+          <span class="green-dot"></span>
+          <i class="fa-solid fa-users"></i> 1 Traveler Onboard
+        </span>
+        <div class="digital-marquee-board">
+          <div class="marquee-track">
+            <span>✨ HAPPY JOURNEY • शुभ यात्रा • HAPPY JOURNEY • शुभ यात्रा ✨</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CENTER STAGE: SOFT-GLOW WATERMARK -->
+    <main class="center-stage">
+      <div class="watermark-title">
+        <h2 class="hero-musafir-title" id="musafirTitle">मुसाफ़िर</h2>
+      </div>
+    </main>
+
+    <!-- BOTTOM FIXED PLAYER -->
+    <footer class="player-wrapper">
+      
+      <!-- Track Meta -->
+      <div class="track-meta">
+        <div class="album-art-box" id="albumBox">
+          <i class="fa-solid fa-compact-disc vinyl-spin"></i>
+        </div>
+      <!-- AFTER -->
+<div class="track-text">
+  <h3 id="songTitle">Safar - Track #01</h3>
+  <p id="artistName">Musafir Radio</p>
+  <span class="copyright-note">© Audio & Visuals belong to their respective owners</span>
+</div>
+      </div>
+
+      <!-- Playback Controls -->
+      <div class="player-core">
+        <div class="control-buttons">
+          <button class="btn-sub" id="shuffleBtn" title="Shuffle"><i class="fa-solid fa-shuffle"></i></button>
+          <button class="btn-step" id="prevBtn" title="Previous"><i class="fa-solid fa-backward-step"></i></button>
+          <button class="btn-play-main" id="playPauseBtn" title="Play/Pause"><i class="fa-solid fa-play"></i></button>
+          <button class="btn-step" id="nextBtn" title="Next"><i class="fa-solid fa-forward-step"></i></button>
+          <button class="btn-sub" id="repeatBtn" title="Repeat"><i class="fa-solid fa-repeat"></i></button>
+        </div>
+
+        <div class="progress-container">
+          <span class="time-stamp" id="currentTime">0:00</span>
+          <div class="range-slider-wrapper">
+            <input type="range" id="progressBar" value="0" max="100" class="custom-slider">
+            <div class="slider-fill" id="progressFill"></div>
+          </div>
+          <span class="time-stamp" id="duration">0:00</span>
+        </div>
+      </div>
+
+      <!-- Multi-Channel Mixer -->
+      <div class="mixer-controls">
+        <div class="mixer-channel">
+          <i class="fa-solid fa-music" title="Music Volume"></i>
+          <input type="range" id="musicVolumeBar" value="85" max="100" class="custom-slider small-slider">
+        </div>
+        <div class="mixer-channel">
+          <i class="fa-solid fa-cloud-rain" title="Rain Volume"></i>
+          <input type="range" id="rainVolumeBar" value="40" max="100" class="custom-slider small-slider">
+        </div>
+        <div class="mixer-channel">
+          <i class="fa-solid fa-bus" title="Engine Volume"></i>
+          <input type="range" id="engineVolumeBar" value="25" max="100" class="custom-slider small-slider">
+        </div>
+      </div>
+
+    </footer>
+
+  </div>
+
+  <!-- Audio Sources -->
+  <audio id="mainAudio" src="assets/music1.mp3" preload="metadata"></audio>
+  <audio id="rainAudio" src="assets/rain.mp3" loop preload="auto"></audio>
+  <audio id="engineAudio" src="assets/bus-engine.mp3" loop preload="auto"></audio>
+  <audio id="conductorAudio" src="assets/conductor-announcements.mp3" preload="auto"></audio>
+
+  <!-- Firebase Core & Realtime Database SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <!-- Custom JavaScript Engine -->
+  <script src="script.js"></script>
+</body>
+</html>
