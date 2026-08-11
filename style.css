@@ -815,3 +815,16 @@ canvas {
     height: 3px;
   }
 }
+/* ========================================== */
+/* INSTANT POSTER LOADING & SMOOTH TRANSITION */
+/* ========================================== */
+
+#illustrationStage {
+  background: url('assets/poster.jpg') center/cover no-repeat !important;
+}
+
+#bgVideo {
+  background: transparent !important;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}

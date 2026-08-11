@@ -36,7 +36,7 @@
   <!-- Animated Video Background Stage -->
   <div class="illustration-overlay" id="illustrationStage">
     <!-- High-quality looping animated bus video -->
-    <video autoplay loop muted playsinline preload="auto" id="bgVideo" class="bg-art">
+    <video autoplay loop muted playsinline preload="auto" poster="assets/poster.jpg" id="bgVideo" class="bg-art">
       <source src="assets/bus-night-view.mp4" type="video/mp4">
     </video>
   
@@ -45,18 +45,13 @@
   
     <div class="cabin-lighting-glow" id="cabinGlow"></div>
   </div>
-
-
-      
-      <div class="cabin-lighting-glow" id="cabinGlow"></div>
-      
-      <!-- Interactive Bus Steering Wheel -->
-      <div class="steering-wrapper">
-        <div class="steering-wheel" id="steeringWheel">
-          <div class="steering-center-badge"></div>
-        </div>
-      </div>
+  
+  <!-- Interactive Bus Steering Wheel -->
+  <div class="steering-wrapper">
+    <div class="steering-wheel" id="steeringWheel">
+      <div class="steering-center-badge"></div>
     </div>
+  </div>
 
     <!-- Canvas 4: Raindroplets Canvas -->
     <canvas id="rainCanvas"></canvas>
