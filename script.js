@@ -581,3 +581,22 @@ document.addEventListener('DOMContentLoaded', () => {
     bgVideo.play().catch(err => console.log("Autoplay buffered:", err));
   }
 });
+// ==========================================
+// HIDE POSTER OVERLAY WHEN VIDEO PLAYS
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  const bgVideo = document.getElementById('bgVideo');
+  const videoLoader = document.getElementById('videoLoader');
+
+  if (bgVideo && videoLoader) {
+    // When video actually starts rendering frames
+    bgVideo.addEventListener('playing', () => {
+      videoLoader.classList.add('is-hidden');
+    });
+
+    // Fallback: If video takes longer, hide loader after 3 seconds
+    setTimeout(() => {
+      videoLoader.classList.add('is-hidden');
+    }, 3000);
+  }
+});

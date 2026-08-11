@@ -35,10 +35,15 @@
 
     <!-- Animated Video Background Stage -->
     <div class="illustration-overlay" id="illustrationStage">
-      <!-- High-quality looping animated bus video -->
-      <video autoplay loop muted playsinline preload="auto" id="bgVideo" class="bg-art">
-        <source src="assets/bus-night-view.mp4" type="video/mp4">
-      </video>
+     <!-- High-quality looping animated bus video -->
+<video autoplay loop muted playsinline preload="auto" poster="assets/poster.jpg" id="bgVideo" class="bg-art">
+  <source src="assets/bus-night-view.mp4" type="video/mp4">
+</video>
+
+<!-- Title overlay displayed during initial image/video loading -->
+<div class="video-loader-overlay" id="videoLoader">
+  <h1 class="poster-musafir-title">मुसाफ़िर</h1>
+</div>
       
       <div class="cabin-lighting-glow" id="cabinGlow"></div>
       
