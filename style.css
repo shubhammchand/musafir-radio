@@ -744,7 +744,7 @@ canvas {
   z-index: 4;
 }
 /* ========================================== */
-/* MOBILE VERTICAL POSITIONING FIX            */
+/* EXACT MOBILE LAYOUT & SPACING FIX          */
 /* ========================================== */
 @media screen and (max-width: 600px) {
   html, body {
@@ -753,36 +753,41 @@ canvas {
     background-color: #0b0d12 !important;
   }
 
-  /* Overall container setup */
+  /* Fill full screen without forcing elements apart */
   .app-interface,
   .viewport-wrapper,
   #viewport {
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     height: 100vh !important;
-    padding: 4px 10px !important;
+    padding: 6px 12px !important;
     box-sizing: border-box !important;
+    gap: 8px !important;
   }
 
-  /* BLUE CIRCLE: Top Header & Controls (Pushed UP) */
+  /* Top Control Card */
   header, 
   .top-bar, 
   .controls-panel, 
   .header-card {
-    margin-top: -8px !important;
+    position: relative !important;
     z-index: 30 !important;
+    flex-shrink: 0 !important;
   }
 
-  /* YELLOW CIRCLE: Video Stage (Expanded & Pushed DOWN) */
+  /* Video Stage - Keep natural height & cover canvas gaps */
   .illustration-overlay, 
   #illustrationStage {
-    flex: 1 !important;
-    margin-top: 4px !important;
-    margin-bottom: -35px !important;
     position: relative !important;
+    width: 100% !important;
+    height: 38vh !important;
+    min-height: 240px !important;
+    max-height: 320px !important;
     overflow: hidden !important;
     border-radius: 16px !important;
+    margin-bottom: -40px !important; /* Pull player up over bottom edge */
+    z-index: 5 !important;
   }
 
   video.bg-art, 
@@ -795,18 +800,23 @@ canvas {
     left: 0 !important;
   }
 
-  /* RED CIRCLE: Bottom Music Player Card (Pushed UP) */
+  /* Canvas background match */
+  #roadCanvas, #trafficCanvas, #skyCanvas, #rainCanvas {
+    background-color: #0b0d12 !important;
+  }
+
+  /* Bottom Music Player - Fixed position at bottom */
   .player-wrapper, 
   .music-player, 
   #playerCard {
-    margin-top: -30px !important;
+    margin-top: auto !important;
     padding: 12px 14px !important;
     border-radius: 20px 20px 0 0 !important;
-    background: rgba(18, 20, 26, 0.95) !important;
+    background: rgba(18, 20, 26, 0.96) !important;
     backdrop-filter: blur(16px) !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-    box-shadow: 0 -15px 35px rgba(0, 0, 0, 0.9) !important;
+    box-shadow: 0 -15px 35px rgba(0, 0, 0, 0.95) !important;
     z-index: 30 !important;
+    flex-shrink: 0 !important;
   }
 }
-
