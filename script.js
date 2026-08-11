@@ -572,31 +572,28 @@ drawRainEngine();
 // Load Startup Track
 loadTrack(currentTrackIndex);
 // ==========================================
-// FORCE IMMEDIATE VIDEO BUFFERING ON LOAD
+// MOBILE AUDIO UNLOCK HANDLER
 // ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-  const bgVideo = document.getElementById('bgVideo');
-  if (bgVideo) {
-    bgVideo.load();
-    bgVideo.play().catch(err => console.log("Autoplay buffered:", err));
-  }
-});
-// ==========================================
-// HIDE POSTER OVERLAY WHEN VIDEO PLAYS
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-  const bgVideo = document.getElementById('bgVideo');
-  const videoLoader = document.getElementById('videoLoader');
+function unlockMobileAudio() {
+  const rainAudio = document.getElementById('rainAudio');
+  const engineAudio = document.getElementById('engineAudio');
+  const mainMusic = document.getElementById('mainMusic');
 
-  if (bgVideo && videoLoader) {
-    // When video actually starts rendering frames
-    bgVideo.addEventListener('playing', () => {
-      videoLoader.classList.add('is-hidden');
-    });
+  const audioTracks = [rainAudio, engineAudio, mainMusic];
 
-    // Fallback: If video takes longer, hide loader after 3 seconds
-    setTimeout(() => {
-      videoLoader.classList.add('is-hidden');
-    }, 3000);
-  }
-});
+  audioTracks.forEach(track => {
+    if (track) {
+      track.play().then(() => {
+        if (track.paused) track.pause();
+      }).catch(err => {
+        console.log("Audio unlock waiting for user tap:", err);
+      });
+    }
+  });
+
+  document.removeEventListener('touchstart', unlockMobileAudio);
+  document.removeEventListener('click', unlockMobileAudio);
+}
+
+document.addEventListener('touchstart', unlockMobileAudio, { once: true });
+document.addEventListener('click', unlockMobileAudio, { once: true });
