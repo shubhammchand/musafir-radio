@@ -616,3 +616,31 @@ canvas {
     display: none;
   }
 }
+/* ========================================== */
+/* MOBILE VIDEO ASPECT RATIO & LOADING FIX    */
+/* ========================================== */
+
+/* Ensure smooth dark background while video loads */
+#bgVideo {
+  background-color: #0b0d12;
+}
+
+@media (max-width: 600px) {
+  /* Maintain 16:9 landscape aspect ratio on narrow phone screens */
+  video.bg-art, #bgVideo {
+    width: 100% !important;
+    height: auto !important;
+    max-height: 45vh !important;
+    object-fit: contain !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    border-radius: 12px;
+  }
+
+  /* Provide seamless dark backdrop framing for the 16:9 video */
+  body {
+    background-color: #0b0d12 !important;
+  }
+}

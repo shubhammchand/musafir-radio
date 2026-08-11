@@ -571,3 +571,13 @@ drawRainEngine();
 
 // Load Startup Track
 loadTrack(currentTrackIndex);
+// ==========================================
+// FORCE IMMEDIATE VIDEO BUFFERING ON LOAD
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+  const bgVideo = document.getElementById('bgVideo');
+  if (bgVideo) {
+    bgVideo.load();
+    bgVideo.play().catch(err => console.log("Autoplay buffered:", err));
+  }
+});
