@@ -1,33 +1,39 @@
 // ==========================================
-// MOBILE AUDIO UNLOCK HANDLER
+// RELIABLE MOBILE AUDIO UNLOCK ENGINE
 // ==========================================
+let audioUnlocked = false;
+
 function unlockMobileAudio() {
+  if (audioUnlocked) return;
+
   const rainAudio = document.getElementById('rainAudio');
   const engineAudio = document.getElementById('engineAudio');
-  const mainMusic = document.getElementById('mainMusic');
+  const mainAudio = document.getElementById('mainAudio');
+  const conductorAudio = document.getElementById('conductorAudio');
 
-  const audioTracks = [rainAudio, engineAudio, mainMusic];
+  const tracks = [rainAudio, engineAudio, mainAudio, conductorAudio];
 
-  audioTracks.forEach(track => {
+  tracks.forEach(track => {
     if (track) {
-      // Play and immediately pause to unlock mobile browser restrictions
-      track.play().then(() => {
-        if (track.paused) track.pause();
-      }).catch(err => {
-        console.log("Audio unlock waiting for user gesture:", err);
-      });
+      const originalVolume = track.volume;
+      track.volume = 0;
+      const playPromise = track.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          track.pause();
+          track.volume = originalVolume;
+        }).catch(err => console.log("Audio unlock wait:", err));
+      }
     }
   });
 
-  // Remove event listeners after first tap
+  audioUnlocked = true;
   document.removeEventListener('touchstart', unlockMobileAudio);
   document.removeEventListener('click', unlockMobileAudio);
 }
 
-// Listen for first user tap/click anywhere on screen
 document.addEventListener('touchstart', unlockMobileAudio, { once: true });
 document.addEventListener('click', unlockMobileAudio, { once: true });
-
 // ==========================================
 // 1. REAL-TIME PRESENCE ENGINE (FIREBASE)
 // ==========================================
@@ -204,33 +210,91 @@ if (rainVolumeBar && rainAudio) {
 if (engineVolumeBar && engineAudio) {
   engineVolumeBar.addEventListener('input', (e) => { engineAudio.volume = e.target.value / 100; });
 }
-
 // ==========================================
-// MOBILE AUDIO UNLOCK HANDLER
+// AMBIENT SOUND & WINDOW CONTROLS
 // ==========================================
-function unlockMobileAudio() {
-  const rainAudio = document.getElementById('rainAudio');
-  const engineAudio = document.getElementById('engineAudio');
-  const mainMusic = document.getElementById('mainMusic');
+const btnAuto = document.getElementById('btnAuto');
+const btnWindow = document.getElementById('btnWindow');
+const btnRain = document.getElementById('btnRain');
+const btnEngine = document.getElementById('btnEngine');
+const btnConductor = document.getElementById('btnConductor');
 
-  const audioTracks = [rainAudio, engineAudio, mainMusic];
+const rainAudio = document.getElementById('rainAudio');
+const engineAudio = document.getElementById('engineAudio');
+const conductorAudio = document.getElementById('conductorAudio');
+const bgVideo = document.getElementById('bgVideo');
 
-  audioTracks.forEach(track => {
-    if (track) {
-      track.play().then(() => {
-        if (track.paused) track.pause();
-      }).catch(err => {
-        console.log("Audio unlock waiting for user tap:", err);
-      });
+// 1. RAIN TOGGLE
+if (btnRain && rainAudio) {
+  btnRain.addEventListener('click', () => {
+    unlockMobileAudio();
+    if (rainAudio.paused) {
+      rainAudio.play().then(() => btnRain.classList.add('active')).catch(e => console.log(e));
+    } else {
+      rainAudio.pause();
+      btnRain.classList.remove('active');
     }
   });
-
-  document.removeEventListener('touchstart', unlockMobileAudio);
-  document.removeEventListener('click', unlockMobileAudio);
 }
 
-document.addEventListener('touchstart', unlockMobileAudio, { once: true });
-document.addEventListener('click', unlockMobileAudio, { once: true });
+// 2. ENGINE TOGGLE
+if (btnEngine && engineAudio) {
+  btnEngine.addEventListener('click', () => {
+    unlockMobileAudio();
+    if (engineAudio.paused) {
+      engineAudio.play().then(() => btnEngine.classList.add('active')).catch(e => console.log(e));
+    } else {
+      engineAudio.pause();
+      btnEngine.classList.remove('active');
+    }
+  });
+}
+
+// 3. STOPS / CONDUCTOR TOGGLE
+if (btnConductor && conductorAudio) {
+  btnConductor.addEventListener('click', () => {
+    unlockMobileAudio();
+    if (conductorAudio.paused) {
+      conductorAudio.currentTime = 0;
+      conductorAudio.play().then(() => btnConductor.classList.add('active')).catch(e => console.log(e));
+    } else {
+      conductorAudio.pause();
+      conductorAudio.currentTime = 0;
+      btnConductor.classList.remove('active');
+    }
+  });
+  conductorAudio.addEventListener('ended', () => btnConductor.classList.remove('active'));
+}
+
+// 4. WINDOW VIEW TOGGLE
+if (btnWindow && bgVideo) {
+  btnWindow.addEventListener('click', () => {
+    bgVideo.classList.toggle('tinted');
+    btnWindow.classList.toggle('active', bgVideo.classList.contains('tinted'));
+  });
+}
+
+// 5. AUTO TOGGLE
+if (btnAuto && rainAudio && engineAudio) {
+  btnAuto.addEventListener('click', () => {
+    unlockMobileAudio();
+    const isBothPlaying = !rainAudio.paused && !engineAudio.paused;
+    if (isBothPlaying) {
+      rainAudio.pause();
+      engineAudio.pause();
+      btnAuto.classList.remove('active');
+      if (btnRain) btnRain.classList.remove('active');
+      if (btnEngine) btnEngine.classList.remove('active');
+    } else {
+      Promise.all([rainAudio.play(), engineAudio.play()]).then(() => {
+        btnAuto.classList.add('active');
+        if (btnRain) btnRain.classList.add('active');
+        if (btnEngine) btnEngine.classList.add('active');
+      }).catch(e => console.log(e));
+    }
+  });
+}
+  
 
 // SEAMLESS VIDEO LOOP (Fixes 1-sec video stutter when video ends)
 if (bgVideo) {
