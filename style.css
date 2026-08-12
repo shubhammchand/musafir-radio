@@ -617,19 +617,14 @@ canvas {
   }
 }
 /* ========================================== */
-/* MOBILE VIDEO ASPECT RATIO & LOADING FIX    */
+/* MOBILE RESPONSIVE FIX (ASPECT & COVERAGE)  */
 /* ========================================== */
-
-/* Ensure smooth dark background while video loads */
-#bgVideo {
-  background-color: #0b0d12;
-}
 @media screen and (max-width: 600px) {
   html, body {
     overflow: hidden;
     height: 100vh;
     height: -webkit-fill-available;
-    background-color: #050508 !important;
+    background-color: #050508;
   }
 
   .app-interface {
@@ -641,6 +636,7 @@ canvas {
     justify-content: space-between;
   }
 
+  /* Full screen canvas viewport stack */
   .viewport-wrapper, 
   #viewport {
     position: absolute !important;
@@ -648,6 +644,8 @@ canvas {
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
+    padding: 0 !important;
+    gap: 0 !important;
   }
 
   .illustration-overlay, 
@@ -657,28 +655,119 @@ canvas {
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    background: radial-gradient(circle, rgba(12, 14, 22, 0.6) 0%, rgba(5, 5, 8, 1) 90%);
+    overflow: hidden !important;
   }
 
-  /* Video retains 100% sharp quality without forced zoom */
+  /* Video fills mobile screen completely while preserving high quality */
   video.bg-art, 
   #bgVideo {
-    position: relative !important;
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
     width: 100% !important;
-    height: auto !important;
-    max-height: 100% !important;
-    object-fit: contain !important;
-    transform: none !important;
+    height: 100% !important;
+    transform: translate(-50%, -50%) !important;
+    object-fit: cover !important;
     filter: brightness(0.85) contrast(1.1) !important;
     transition: filter 0.4s ease !important;
   }
 
-  /* High-priority Window Tinting Rule */
+  /* High-priority Tint toggle for WINDOW button */
   video.bg-art.tinted,
   #bgVideo.tinted {
     filter: brightness(1.35) contrast(1.3) saturate(1.25) !important;
+  }
+
+  /* Header & Navigation Fixes */
+  .top-navbar {
+    padding: 10px 12px;
+    border-radius: 16px;
+    gap: 8px;
+  }
+
+  .brand-title {
+    font-size: 1.3rem;
+  }
+
+  .ambient-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+
+  .ambient-btn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    justify-content: center;
+  }
+
+  /* Active yellow state override */
+  .ambient-btn.active {
+    background: var(--primary-amber) !important;
+    color: #111 !important;
+    border-color: var(--primary-amber) !important;
+    box-shadow: 0 0 12px var(--amber-soft-glow) !important;
+  }
+
+  .right-header-group {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .travelers-badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+
+  .digital-marquee-board {
+    width: 130px;
+    padding: 4px;
+  }
+
+  .hero-musafir-title {
+    font-size: 3.2rem;
+    letter-spacing: 2px;
+  }
+
+  .player-wrapper {
+    padding: 12px 14px;
+    border-radius: 18px;
+    gap: 8px;
+  }
+
+  .track-meta {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .album-art-box {
+    width: 38px;
+    height: 38px;
+    font-size: 1.4rem;
+  }
+
+  .track-text h3 {
+    font-size: 0.85rem;
+    max-width: 160px;
+  }
+
+  .track-text p {
+    font-size: 0.7rem;
+  }
+
+  .control-buttons {
+    gap: 16px;
+  }
+
+  .btn-play-main {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .mixer-controls {
+    display: none;
   }
 }

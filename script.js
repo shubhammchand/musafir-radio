@@ -1,5 +1,5 @@
 // ==========================================
-// RELIABLE MOBILE AUDIO UNLOCK ENGINE
+// 1. MOBILE AUDIO UNLOCK ENGINE
 // ==========================================
 let audioUnlocked = false;
 
@@ -22,7 +22,7 @@ function unlockMobileAudio() {
         playPromise.then(() => {
           track.pause();
           track.volume = originalVolume;
-        }).catch(err => console.log("Audio unlock wait:", err));
+        }).catch(err => console.log("Audio unlock waiting:", err));
       }
     }
   });
@@ -34,8 +34,9 @@ function unlockMobileAudio() {
 
 document.addEventListener('touchstart', unlockMobileAudio, { once: true });
 document.addEventListener('click', unlockMobileAudio, { once: true });
+
 // ==========================================
-// 1. REAL-TIME PRESENCE ENGINE (FIREBASE)
+// 2. REAL-TIME PRESENCE ENGINE (FIREBASE)
 // ==========================================
 const firebaseConfig = {
   apiKey: "AIzaSyD7pwHoljKpWBSt6zdXSYFkgCQPjXglh0A",
@@ -52,32 +53,27 @@ try {
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     
-    // Generate unique session key for current user tab
     const myPresenceRef = db.ref('presence/' + Math.random().toString(36).substring(2, 9));
     const onlineCountRef = db.ref('presence');
 
-    // On tab close/disconnect, wipe user entry from Firebase
     myPresenceRef.onDisconnect().remove();
     myPresenceRef.set({ online: true, time: Date.now() });
 
-    // Listen to real-time connected visitors
-    // AFTER
-onlineCountRef.on('value', (snapshot) => {
-  const count = snapshot.numChildren() || 1;
-  const countEl = document.getElementById('activeTravelers');
-  if (countEl) {
-    countEl.innerHTML = `<span class="green-dot"></span> <i class="fa-solid fa-users"></i> ${count} ${count === 1 ? 'Traveler' : 'Travelers'} Onboard`;
-  }
-});
+    onlineCountRef.on('value', (snapshot) => {
+      const count = snapshot.numChildren() || 1;
+      const countEl = document.getElementById('activeTravelers');
+      if (countEl) {
+        countEl.innerHTML = `<span class="green-dot"></span> <i class="fa-solid fa-users"></i> ${count} ${count === 1 ? 'Traveler' : 'Travelers'} Onboard`;
+      }
+    });
   }
 } catch (e) {
   console.error("Firebase Initialization Error:", e);
 }
 
 // ==========================================
-// 2. 60-SONG PLAYLIST & AUDIO MANAGEMENT
+// 3. PLAYLIST & AUDIO MANAGEMENT
 // ==========================================
-// Dynamically configured for 60 songs (assets/music1.mp3 to assets/music60.mp3)
 const playlist = Array.from({ length: 60 }, (_, i) => {
   const num = i + 1;
   return {
@@ -95,6 +91,7 @@ const mainAudio = document.getElementById('mainAudio');
 const rainAudio = document.getElementById('rainAudio');
 const engineAudio = document.getElementById('engineAudio');
 const conductorAudio = document.getElementById('conductorAudio');
+const bgVideo = document.getElementById('bgVideo');
 
 const playPauseBtn = document.getElementById('playPauseBtn');
 const playIcon = playPauseBtn ? playPauseBtn.querySelector('i') : null;
@@ -110,11 +107,11 @@ const musicVolumeBar = document.getElementById('musicVolumeBar');
 const rainVolumeBar = document.getElementById('rainVolumeBar');
 const engineVolumeBar = document.getElementById('engineVolumeBar');
 
+const btnAuto = document.getElementById('btnAuto');
 const btnWindow = document.getElementById('btnWindow');
 const btnRain = document.getElementById('btnRain');
 const btnEngine = document.getElementById('btnEngine');
 const btnConductor = document.getElementById('btnConductor');
-const bgVideo = document.getElementById('bgVideo');
 
 function loadTrack(index) {
   const track = playlist[index];
@@ -125,6 +122,7 @@ function loadTrack(index) {
 
 function playTrack() {
   if (!mainAudio) return;
+  unlockMobileAudio();
   mainAudio.play().then(() => {
     isPlaying = true;
     if (playIcon) {
@@ -210,21 +208,10 @@ if (rainVolumeBar && rainAudio) {
 if (engineVolumeBar && engineAudio) {
   engineVolumeBar.addEventListener('input', (e) => { engineAudio.volume = e.target.value / 100; });
 }
-// ==========================================
-// AMBIENT SOUND & WINDOW CONTROLS
-// ==========================================
-const btnAuto = document.getElementById('btnAuto');
-const btnWindow = document.getElementById('btnWindow');
-const btnRain = document.getElementById('btnRain');
-const btnEngine = document.getElementById('btnEngine');
-const btnConductor = document.getElementById('btnConductor');
 
-const rainAudio = document.getElementById('rainAudio');
-const engineAudio = document.getElementById('engineAudio');
-const conductorAudio = document.getElementById('conductorAudio');
-const bgVideo = document.getElementById('bgVideo');
-
-// 1. RAIN TOGGLE
+// ==========================================
+// 4. AMBIENT SOUND & WINDOW TOGGLES
+// ==========================================
 if (btnRain && rainAudio) {
   btnRain.addEventListener('click', () => {
     unlockMobileAudio();
@@ -237,7 +224,6 @@ if (btnRain && rainAudio) {
   });
 }
 
-// 2. ENGINE TOGGLE
 if (btnEngine && engineAudio) {
   btnEngine.addEventListener('click', () => {
     unlockMobileAudio();
@@ -250,7 +236,6 @@ if (btnEngine && engineAudio) {
   });
 }
 
-// 3. STOPS / CONDUCTOR TOGGLE
 if (btnConductor && conductorAudio) {
   btnConductor.addEventListener('click', () => {
     unlockMobileAudio();
@@ -266,7 +251,6 @@ if (btnConductor && conductorAudio) {
   conductorAudio.addEventListener('ended', () => btnConductor.classList.remove('active'));
 }
 
-// 4. WINDOW VIEW TOGGLE
 if (btnWindow && bgVideo) {
   btnWindow.addEventListener('click', () => {
     bgVideo.classList.toggle('tinted');
@@ -274,7 +258,6 @@ if (btnWindow && bgVideo) {
   });
 }
 
-// 5. AUTO TOGGLE
 if (btnAuto && rainAudio && engineAudio) {
   btnAuto.addEventListener('click', () => {
     unlockMobileAudio();
@@ -294,28 +277,19 @@ if (btnAuto && rainAudio && engineAudio) {
     }
   });
 }
-  
 
-// SEAMLESS VIDEO LOOP (Fixes 1-sec video stutter when video ends)
-if (bgVideo) {
-  bgVideo.addEventListener('timeupdate', () => {
-    if (bgVideo.duration && (bgVideo.duration - bgVideo.currentTime < 0.15)) {
-      bgVideo.currentTime = 0;
-      bgVideo.play();
-    }
-  });
-}
-
-// LIVE CLOCK ENGINE
+// ==========================================
+// 5. LIVE CLOCK ENGINE
+// ==========================================
 function updateClock() {
   const now = new Date();
   let h = now.getHours();
   const m = now.getMinutes();
-  const s = now.getSeconds(); // Grab seconds
+  const s = now.getSeconds();
   const ampm = h >= 12 ? 'PM' : 'AM';
   h = h % 12 || 12;
   const formattedMinutes = m < 10 ? '0' + m : m;
-  const formattedSeconds = s < 10 ? '0' + s : s; // Pad single digits with 0
+  const formattedSeconds = s < 10 ? '0' + s : s;
   
   const liveClockEl = document.getElementById('liveClock');
   if (liveClockEl) {
@@ -326,7 +300,19 @@ setInterval(updateClock, 1000);
 updateClock();
 
 // ==========================================
-// 3. STEERING WHEEL INTERACTIVE ROTATION
+// 6. SEAMLESS VIDEO LOOP
+// ==========================================
+if (bgVideo) {
+  bgVideo.addEventListener('timeupdate', () => {
+    if (bgVideo.duration && (bgVideo.duration - bgVideo.currentTime < 0.15)) {
+      bgVideo.currentTime = 0;
+      bgVideo.play();
+    }
+  });
+}
+
+// ==========================================
+// 7. STEERING WHEEL ROTATION
 // ==========================================
 const steeringWheel = document.getElementById('steeringWheel');
 let steeringAngle = 0;
@@ -339,26 +325,8 @@ window.addEventListener('mousemove', (e) => {
   }
 });
 
-window.addEventListener('keydown', (e) => {
-  if (!steeringWheel) return;
-  if (e.key === 'ArrowLeft') {
-    steeringAngle = -25;
-    steeringWheel.style.transform = `rotate(${steeringAngle}deg)`;
-  } else if (e.key === 'ArrowRight') {
-    steeringAngle = 25;
-    steeringWheel.style.transform = `rotate(${steeringAngle}deg)`;
-  }
-});
-
-window.addEventListener('keyup', () => {
-  if (steeringWheel) {
-    steeringAngle = 0;
-    steeringWheel.style.transform = `rotate(0deg)`;
-  }
-});
-
 // ==========================================
-// 4. PROCEDURAL SKY & LIGHTNING BOLT ENGINE
+// 8. PROCEDURAL SKY & LIGHTNING ENGINE
 // ==========================================
 const skyCanvas = document.getElementById('skyCanvas');
 const sCtx = skyCanvas ? skyCanvas.getContext('2d') : null;
@@ -437,7 +405,7 @@ function scheduleRandomLightning() {
 scheduleRandomLightning();
 
 // ==========================================
-// 5. MOVING ROAD & HIGHWAY SPEED ENGINE
+// 9. MOVING ROAD ENGINE
 // ==========================================
 const roadCanvas = document.getElementById('roadCanvas');
 const rCtx = roadCanvas ? roadCanvas.getContext('2d') : null;
@@ -500,7 +468,7 @@ function drawRoadEngine() {
 drawRoadEngine();
 
 // ==========================================
-// 6. DYNAMIC MOVING FRONT TRUCK & TRAFFIC
+// 10. FRONT TRUCK TRAFFIC ENGINE
 // ==========================================
 const trafficCanvas = document.getElementById('trafficCanvas');
 const tCtx = trafficCanvas ? trafficCanvas.getContext('2d') : null;
@@ -514,12 +482,7 @@ function resizeTrafficCanvas() {
 window.addEventListener('resize', resizeTrafficCanvas);
 resizeTrafficCanvas();
 
-let truckState = {
-  z: 380,
-  laneOffset: 25,
-  speed: 0.6,
-  dir: 1
-};
+let truckState = { z: 380, laneOffset: 25, speed: 0.6, dir: 1 };
 
 function drawTrafficEngine() {
   if (!trafficCanvas || !tCtx) return;
@@ -531,10 +494,7 @@ function drawTrafficEngine() {
   tCtx.clearRect(0, 0, w, h);
 
   truckState.z += truckState.speed * truckState.dir;
-  if (truckState.z > 700 || truckState.z < 220) {
-    truckState.dir *= -1;
-  }
-
+  if (truckState.z > 700 || truckState.z < 220) truckState.dir *= -1;
   truckState.laneOffset += Math.sin(Date.now() * 0.001) * 0.15;
 
   let scale = 300 / truckState.z;
@@ -569,7 +529,7 @@ function drawTrafficEngine() {
 drawTrafficEngine();
 
 // ==========================================
-// 7. WINDSHIELD RAINDROP ENGINE
+// 11. RAINDROP ENGINE
 // ==========================================
 const rainCanvas = document.getElementById('rainCanvas');
 const rainCtx = rainCanvas ? rainCanvas.getContext('2d') : null;
@@ -619,5 +579,5 @@ function drawRainEngine() {
 }
 drawRainEngine();
 
-// Load Startup Track
+// Load Initial Track
 loadTrack(currentTrackIndex);
