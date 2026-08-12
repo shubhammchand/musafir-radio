@@ -587,3 +587,16 @@ drawRainEngine();
 
 // Load Initial Track
 loadTrack(currentTrackIndex);
+// ==========================================
+// DEBOUNCED RESIZE ENGINE (PREVENTS FLICKER)
+// ==========================================
+let resizeTimeout;
+
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (typeof resizeSkyCanvas === 'function') resizeSkyCanvas();
+    if (typeof resizeRoadCanvas === 'function') resizeRoadCanvas();
+    if (typeof resizeTrafficCanvas === 'function') resizeTrafficCanvas();
+    if (typeof resizeRainCanvas === 'function') resizeRainCanvas();
+  }, 100);});
