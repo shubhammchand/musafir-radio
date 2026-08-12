@@ -625,173 +625,153 @@ canvas {
   background-color: #0b0d12;
 }
 
-@media (max-width: 600px) {
-  /* Maintain 16:9 landscape aspect ratio on narrow phone screens */
-  video.bg-art, #bgVideo {
-    width: 100% !important;
-    height: auto !important;
-    max-height: 45vh !important;
-    object-fit: contain !important;
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    border-radius: 12px;
-  }
-
-  /* Provide seamless dark backdrop framing for the 16:9 video */
-  body {
-    background-color: #0b0d12 !important;
-  }
-}
-/* ========================================== */
-/* POSTER LOADING OVERLAY & TEXT              */
-/* ========================================== */
-
-.illustration-overlay {
-  position: relative;
-}
-
-/* Center overlay over the poster image */
-.video-loader-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  pointer-events: none;
-  transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
-  opacity: 1;
-  visibility: visible;
-  text-align: center;
-  width: 100%;
-}
-
-/* Exact Hindi title styling matching design */
-.poster-musafir-title {
-  font-family: 'Yatra One', 'Rozha One', 'Teko', sans-serif;
-  font-size: 4.5rem;
-  font-weight: 800;
-  color: #ffffff;
-  text-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.8),
-    0 0 35px rgba(245, 166, 35, 0.5),
-    2px 4px 12px rgba(0, 0, 0, 0.9);
-  letter-spacing: 3px;
-  margin: 0;
-}
-
-/* Class added by JS to hide text when video begins playing */
-.video-loader-overlay.is-hidden {
-  opacity: 0;
-  visibility: hidden;
-}
-
-@media (max-width: 600px) {
-  .poster-musafir-title {
-    font-size: 2.8rem;
-  }
-}
-/* ========================================== */
-/* FORCE 16:9 ASPECT RATIO ON MOBILE SCREENS  */
+@/* ========================================== */
+/* MOBILE RESPONSIVE FIXES (ASPECT & GAPS)    */
 /* ========================================== */
 @media screen and (max-width: 600px) {
-  /* Prevent full-screen container overflow */
-  .viewport-wrapper, 
-  #viewport, 
-  .illustration-overlay, 
-  #illustrationStage {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: hidden !important;
-  }
-
-  /* Force video element to maintain 16:9 ratio and fit inside mobile width */
-  video.bg-art, 
-  #bgVideo {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    transform: none !important;
-    width: 100vw !important;
-    height: auto !important;
-    aspect-ratio: 16 / 9 !important;
-    object-fit: contain !important;
-    max-height: 50vh !important;
-    border-radius: 12px;
-  }
-
-  /* Provide a clean dark backdrop around the 16:9 frame */
-  body {
-    background-color: #0b0d12 !important;
-  }
-}
-/* ========================================== */
-/* WATERMARK MASK & FINAL MOBILE UI FIXES     */
-/* ========================================== */
-
-/* Dark gradient mask to cover bottom-right logo artifact */
-.watermark-cover-mask {
-  position: absolute;
-  bottom: 8%;
-  right: 2%;
-  width: 70px;
-  height: 70px;
-  background: radial-gradient(circle, rgba(11, 13, 18, 0.95) 20%, rgba(11, 13, 18, 0) 80%);
-  filter: blur(8px);
-  pointer-events: none;
-  z-index: 4;
-}
-/* ========================================== */
-/* CLEAN & SAFE MOBILE OVERRIDES              */
-/* ========================================== */
-@media screen and (max-width: 600px) {
-  /* Prevent full-page scrollbar blowout */
   html, body {
-    overflow-x: hidden;
+    overflow: hidden;
+    height: 100vh;
+    height: -webkit-fill-available;
   }
 
-  /* Keep main container fitted to screen */
+  .app-interface {
+    padding: 10px 12px;
+    height: 100vh;
+    height: -webkit-fill-available;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Full screen video coverage to eliminate the bottom gap */
   .viewport-wrapper, 
   #viewport {
-    padding: 8px !important;
-    gap: 8px !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    gap: 0 !important;
   }
 
-  /* Make video container scale naturally */
   .illustration-overlay, 
   #illustrationStage {
-    position: relative !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
-    height: auto !important;
-    aspect-ratio: 16 / 9 !important;
-    max-height: 40vh !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    aspect-ratio: auto !important;
     overflow: hidden !important;
-    border-radius: 12px !important;
+    border-radius: 0 !important;
   }
 
   video.bg-art, 
   #bgVideo {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
+    max-height: 100% !important;
+    transform: none !important;
+    border-radius: 0 !important;
   }
 
-  /* Pull player card up slightly so everything fits on screen */
-  .player-wrapper, 
-  .music-player {
-    margin-top: 0 !important;
-    padding: 12px !important;
-    border-radius: 16px !important;
+  /* Header Controls Formatting */
+  .top-navbar {
+    padding: 10px 12px;
+    border-radius: 16px;
+    gap: 8px;
+  }
+
+  .brand-title {
+    font-size: 1.3rem;
+  }
+
+  .ambient-controls {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+
+  .ambient-btn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    justify-content: center;
+  }
+
+  /* Ensure active state consistently reflects active yellow theme */
+  .ambient-btn.active {
+    background: var(--primary-amber) !important;
+    color: #111 !important;
+    border-color: var(--primary-amber) !important;
+    box-shadow: 0 0 12px var(--amber-soft-glow) !important;
+  }
+
+  .right-header-group {
+    width: 100%;
+    justify-content: space-between;
+    gap: 6px;
+  }
+
+  .travelers-badge {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+  }
+
+  .digital-marquee-board {
+    width: 130px;
+    padding: 4px;
+  }
+
+  .hero-musafir-title {
+    font-size: 3.2rem;
+    letter-spacing: 2px;
+  }
+
+  .player-wrapper {
+    padding: 12px 14px;
+    border-radius: 18px;
+    gap: 8px;
+  }
+
+  .track-meta {
+    width: 100%;
+    gap: 10px;
+  }
+
+  .album-art-box {
+    width: 38px;
+    height: 38px;
+    font-size: 1.4rem;
+  }
+
+  .track-text h3 {
+    font-size: 0.85rem;
+    max-width: 160px;
+  }
+
+  .track-text p {
+    font-size: 0.7rem;
+  }
+
+  .control-buttons {
+    gap: 16px;
+  }
+
+  .btn-play-main {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .mixer-controls {
+    display: none;
   }
 }
-
-
-
-
-
-
-
-
-

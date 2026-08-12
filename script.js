@@ -205,46 +205,32 @@ if (engineVolumeBar && engineAudio) {
   engineVolumeBar.addEventListener('input', (e) => { engineAudio.volume = e.target.value / 100; });
 }
 
-// Ambient Sound Toggles
-if (btnRain && rainAudio) {
-  btnRain.addEventListener('click', () => {
-    btnRain.classList.toggle('active');
-    rainAudio.paused ? rainAudio.play() : rainAudio.pause();
-  });
-}
+// ==========================================
+// MOBILE AUDIO UNLOCK HANDLER
+// ==========================================
+function unlockMobileAudio() {
+  const rainAudio = document.getElementById('rainAudio');
+  const engineAudio = document.getElementById('engineAudio');
+  const mainMusic = document.getElementById('mainMusic');
 
-if (btnEngine && engineAudio) {
-  btnEngine.addEventListener('click', () => {
-    btnEngine.classList.toggle('active');
-    engineAudio.paused ? engineAudio.play() : engineAudio.pause();
-  });
-}
+  const audioTracks = [rainAudio, engineAudio, mainMusic];
 
-if (btnConductor && conductorAudio) {
-  btnConductor.addEventListener('click', () => {
-    if (conductorAudio.paused) {
-      conductorAudio.currentTime = 0;
-      conductorAudio.play();
-      btnConductor.classList.add('active');
-    } else {
-      conductorAudio.pause();
-      conductorAudio.currentTime = 0;
-      btnConductor.classList.remove('active');
+  audioTracks.forEach(track => {
+    if (track) {
+      track.play().then(() => {
+        if (track.paused) track.pause();
+      }).catch(err => {
+        console.log("Audio unlock waiting for user tap:", err);
+      });
     }
   });
 
-  conductorAudio.addEventListener('ended', () => {
-    btnConductor.classList.remove('active');
-  });
+  document.removeEventListener('touchstart', unlockMobileAudio);
+  document.removeEventListener('click', unlockMobileAudio);
 }
 
-// WINDOW BUTTON TOGGLE
-if (btnWindow && bgVideo) {
-  btnWindow.addEventListener('click', () => {
-    btnWindow.classList.toggle('active');
-    bgVideo.classList.toggle('tinted');
-  });
-}
+document.addEventListener('touchstart', unlockMobileAudio, { once: true });
+document.addEventListener('click', unlockMobileAudio, { once: true });
 
 // SEAMLESS VIDEO LOOP (Fixes 1-sec video stutter when video ends)
 if (bgVideo) {
@@ -571,29 +557,3 @@ drawRainEngine();
 
 // Load Startup Track
 loadTrack(currentTrackIndex);
-// ==========================================
-// MOBILE AUDIO UNLOCK HANDLER
-// ==========================================
-function unlockMobileAudio() {
-  const rainAudio = document.getElementById('rainAudio');
-  const engineAudio = document.getElementById('engineAudio');
-  const mainMusic = document.getElementById('mainMusic');
-
-  const audioTracks = [rainAudio, engineAudio, mainMusic];
-
-  audioTracks.forEach(track => {
-    if (track) {
-      track.play().then(() => {
-        if (track.paused) track.pause();
-      }).catch(err => {
-        console.log("Audio unlock waiting for user tap:", err);
-      });
-    }
-  });
-
-  document.removeEventListener('touchstart', unlockMobileAudio);
-  document.removeEventListener('click', unlockMobileAudio);
-}
-
-document.addEventListener('touchstart', unlockMobileAudio, { once: true });
-document.addEventListener('click', unlockMobileAudio, { once: true });
