@@ -1,5 +1,5 @@
 // ==========================================
-// 1. MOBILE AUDIO UNLOCK ENGINE
+// 1. RELIABLE MOBILE AUDIO UNLOCK ENGINE
 // ==========================================
 let audioUnlocked = false;
 
@@ -15,14 +15,15 @@ function unlockMobileAudio() {
 
   tracks.forEach(track => {
     if (track) {
-      const originalVolume = track.volume;
-      track.volume = 0;
+      // Trigger a brief playback attempt to clear mobile browser autoplay restriction
       const playPromise = track.play();
       if (playPromise !== undefined) {
         playPromise.then(() => {
-          track.pause();
-          track.volume = originalVolume;
-        }).catch(err => console.log("Audio unlock waiting:", err));
+          // Pause ambient tracks immediately until user taps their buttons
+          if (track !== mainAudio) {
+            track.pause();
+          }
+        }).catch(err => console.log("Audio permission waiting for tap:", err));
       }
     }
   });
@@ -92,6 +93,11 @@ const rainAudio = document.getElementById('rainAudio');
 const engineAudio = document.getElementById('engineAudio');
 const conductorAudio = document.getElementById('conductorAudio');
 const bgVideo = document.getElementById('bgVideo');
+// Force full initial volume for mobile compatibility
+if (mainAudio) mainAudio.volume = 1.0;
+if (rainAudio) rainAudio.volume = 0.8;
+if (engineAudio) engineAudio.volume = 0.6;
+if (conductorAudio) conductorAudio.volume = 1.0;
 
 const playPauseBtn = document.getElementById('playPauseBtn');
 const playIcon = playPauseBtn ? playPauseBtn.querySelector('i') : null;
